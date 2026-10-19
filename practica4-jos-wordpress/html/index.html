@@ -1,0 +1,332 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guía personalizada de Docker Compose</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --panel: #151f32;
+      --text: #e5edf8;
+      --muted: #9aacc4;
+      --accent: #38bdf8;
+      --code: #080d18;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    header {
+      padding: 55px 20px;
+      text-align: center;
+      background: linear-gradient(135deg, #0c4a6e, #172554);
+    }
+
+    header h1 { font-size: 2.4rem; margin: 0; }
+    header p { color: #dbeafe; }
+
+    nav {
+      background: var(--panel);
+      padding: 20px;
+      border-bottom: 1px solid #29364b;
+    }
+
+    nav, main { max-width: 950px; margin: auto; }
+    nav a {
+      display: inline-block;
+      color: var(--accent);
+      text-decoration: none;
+      margin: 5px 14px 5px 0;
+    }
+
+    main { padding: 25px 20px 60px; }
+
+    section {
+      background: var(--panel);
+      margin: 22px 0;
+      padding: 24px;
+      border-radius: 14px;
+      border: 1px solid #29364b;
+      scroll-margin-top: 20px;
+    }
+
+    h2 { color: var(--accent); }
+    h3 { color: #c4d9f5; }
+
+    code {
+      font-family: Consolas, monospace;
+      color: #7dd3fc;
+    }
+
+    pre {
+      background: var(--code);
+      padding: 18px;
+      overflow-x: auto;
+      border-radius: 9px;
+      border: 1px solid #263348;
+    }
+
+    pre code { color: #a7f3d0; }
+
+    .note {
+      padding: 12px;
+      background: #172d43;
+      border-left: 4px solid var(--accent);
+      border-radius: 5px;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 30px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🐳 Aprende Docker Compose</h1>
+  <p>Guía práctica personalizada para desarrollar y ejecutar aplicaciones</p>
+  <p>Desde cero hasta tu primer entorno con varios contenedores</p>
+</header>
+
+<nav>
+  <strong>Índice de contenidos</strong><br>
+  <a href="#intro">1. Introducción</a>
+  <a href="#requisitos">2. Requisitos</a>
+  <a href="#yaml">3. Archivo YAML</a>
+  <a href="#ejemplo">4. Primer proyecto</a>
+  <a href="#comandos">5. Comandos</a>
+  <a href="#volumenes">6. Volúmenes</a>
+  <a href="#redes">7. Redes</a>
+  <a href="#errores">8. Errores comunes</a>
+  <a href="#practica">9. Práctica final</a>
+</nav>
+
+<main>
+
+<section id="intro">
+  <h2>1. ¿Qué es Docker Compose?</h2>
+  <p>
+    Docker Compose permite definir y ejecutar aplicaciones que utilizan
+    uno o varios contenedores mediante un archivo YAML.
+  </p>
+  <p>Por ejemplo, puedes ejecutar una aplicación con:</p>
+  <ul>
+    <li>Un contenedor para el backend.</li>
+    <li>Otro contenedor para una base de datos.</li>
+    <li>Un tercero para el frontend.</li>
+  </ul>
+  <p class="note">
+    En lugar de iniciar cada contenedor manualmente, defines el entorno
+    en un archivo y lo administras con unos pocos comandos.
+  </p>
+</section>
+
+<section id="requisitos">
+  <h2>2. Requisitos previos</h2>
+  <ul>
+    <li>Instalar Docker Desktop en Windows o macOS, o Docker Engine y el
+        complemento Docker Compose en Linux.</li>
+    <li>Comprobar que Docker está funcionando.</li>
+    <li>Conocer los comandos básicos de una terminal.</li>
+  </ul>
+  <pre><code>docker --version
+docker compose version
+docker run hello-world</code></pre>
+  <p>Si el último comando termina correctamente, Docker puede ejecutar
+     un contenedor de prueba.</p>
+</section>
+
+<section id="yaml">
+  <h2>3. Entender el archivo compose.yaml</h2>
+  <p>
+    El archivo <code>compose.yaml</code> describe los servicios de la
+    aplicación, sus puertos, sus volúmenes y sus configuraciones.
+  </p>
+  <pre><code>services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "8080:80"</code></pre>
+  <ul>
+    <li><code>services</code>: define los servicios de la aplicación.</li>
+    <li><code>web</code>: nombre del servicio.</li>
+    <li><code>image</code>: imagen que utilizará Docker.</li>
+    <li><code>ports</code>: conecta el puerto 8080 del equipo con el
+        puerto 80 del contenedor.</li>
+  </ul>
+  <p class="note">
+    YAML utiliza la indentación para organizar los datos. Usa espacios,
+    no tabuladores.
+  </p>
+</section>
+
+<section id="ejemplo">
+  <h2>4. Crear tu primer proyecto</h2>
+  <p>Crea una carpeta llamada <code>mi-proyecto</code> y dentro un
+     archivo llamado <code>compose.yaml</code>.</p>
+  <pre><code>services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    restart: unless-stopped</code></pre>
+
+  <h3>Iniciar la aplicación</h3>
+  <pre><code>docker compose up -d</code></pre>
+
+  <h3>Probarla</h3>
+  <p>Abre esta dirección en tu navegador:</p>
+  <p><a href="http://localhost:8080" target="_blank"
+        rel="noopener">http://localhost:8080</a></p>
+
+  <h3>Detenerla</h3>
+  <pre><code>docker compose down</code></pre>
+</section>
+
+<section id="comandos">
+  <h2>5. Comandos esenciales</h2>
+  <pre><code># Iniciar los servicios
+docker compose up -d
+
+# Ver los servicios y su estado
+docker compose ps
+
+# Consultar los registros
+docker compose logs
+
+# Seguir los registros en tiempo real
+docker compose logs -f
+
+# Consultar los registros de un servicio
+docker compose logs -f web
+
+# Reiniciar los servicios
+docker compose restart
+
+# Detener y eliminar los contenedores y la red del proyecto
+docker compose down
+
+# Reconstruir imágenes y arrancar
+docker compose up -d --build</code></pre>
+  <p>Ejecuta estos comandos desde la carpeta donde está tu archivo
+     <code>compose.yaml</code>.</p>
+</section>
+
+<section id="volumenes">
+  <h2>6. ¿Qué son los volúmenes?</h2>
+  <p>
+    Los volúmenes permiten conservar datos aunque se eliminen los
+    contenedores. Son especialmente importantes para bases de datos.
+  </p>
+  <pre><code>services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: cambiar_esta_clave
+      POSTGRES_DB: ejemplo
+    volumes:
+      - datos_postgres:/var/lib/postgresql/data
+
+volumes:
+  datos_postgres:</code></pre>
+  <p class="note">
+    Este ejemplo es educativo. Para un entorno real, utiliza credenciales
+    seguras y evita guardar contraseñas directamente en el archivo.
+  </p>
+  <p>Ten cuidado: <code>docker compose down -v</code> también puede
+     eliminar los volúmenes del proyecto y los datos que contienen.</p>
+</section>
+
+<section id="redes">
+  <h2>7. Redes y comunicación entre servicios</h2>
+  <p>
+    Compose crea una red para el proyecto. Los servicios pueden comunicarse
+    utilizando sus nombres como nombres de host.
+  </p>
+  <pre><code>services:
+  app:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: cambiar_esta_clave
+      POSTGRES_DB: ejemplo</code></pre>
+  <p>
+    En una aplicación que se conecta a PostgreSQL, el host de la base de
+    datos sería <code>db</code>, no <code>localhost</code>.
+  </p>
+  <p>
+    <code>depends_on</code> establece el orden de inicio, pero no garantiza
+    por sí solo que la base de datos ya esté lista para aceptar conexiones.
+  </p>
+</section>
+
+<section id="errores">
+  <h2>8. Errores comunes y soluciones</h2>
+
+  <h3>El puerto ya está ocupado</h3>
+  <p>Prueba otro puerto del equipo:</p>
+  <pre><code>ports:
+  - "8081:80"</code></pre>
+
+  <h3>El contenedor se detiene</h3>
+  <pre><code>docker compose ps
+docker compose logs</code></pre>
+
+  <h3>Los cambios no aparecen</h3>
+  <p>Si modificaste el código de una imagen propia, reconstruye:</p>
+  <pre><code>docker compose up -d --build</code></pre>
+
+  <h3>No encuentra el archivo Compose</h3>
+  <p>Comprueba que estás en la carpeta correcta y que el archivo se llama
+     <code>compose.yaml</code> o <code>docker-compose.yml</code>.</p>
+</section>
+
+<section id="practica">
+  <h2>9. Práctica final</h2>
+  <p>Comprueba lo que has aprendido:</p>
+  <ol>
+    <li>Crea un archivo <code>compose.yaml</code> con un servicio Nginx.</li>
+    <li>Expón el puerto 8080.</li>
+    <li>Inicia el servicio en segundo plano.</li>
+    <li>Abre el navegador y visita <code>localhost:8080</code>.</li>
+    <li>Consulta los registros del contenedor.</li>
+    <li>Detén el proyecto sin eliminar volúmenes innecesariamente.</li>
+  </ol>
+  <h3>Comandos de repaso</h3>
+  <pre><code>docker compose up -d
+docker compose ps
+docker compose logs
+docker compose down</code></pre>
+  <p class="note">
+    Objetivo: comprender cómo definir, iniciar, inspeccionar y detener
+    una aplicación con Docker Compose.
+  </p>
+</section>
+
+</main>
+
+<footer>
+  Guía de estudio de Docker Compose · Aprende practicando
+</footer>
+
+</body>
+</html>
